@@ -38,3 +38,72 @@ function xScale(CSVdata, chosenXAxis) {
   return xLinearScale;
 
 }
+
+// function used for updating xAxis var upon click on axis label
+function renderXAxes(newXScale, xAxis) {
+    var bottomAxis = d3.axisBottom(newXScale);
+  
+    xAxis.transition()
+      .duration(1000)
+      .call(bottomAxis);
+  
+    return xAxis;
+  }
+
+// function used for updating circles group with a transition to
+// new circles
+function renderCircles(circlesGroup, newXScale, chosenXAxis) {
+
+    circlesGroup.transition()
+      .duration(1000)
+      .attr("cx", d => newXScale(d[chosenXAxis]));
+  
+    return circlesGroup;
+  }
+
+  
+
+// function used for updating circles labels group with a transition to
+// new circles
+function renderCircleLabels(circleLabelsGroup, newXScale, chosenXAxis) {
+
+    circleLabelsGroup.transition()
+      .duration(1000)
+      .attr("x", d => newXScale(d[chosenXAxis]));
+  
+    return circleLabelsGroup;
+  }
+
+  // function used for updating circles group with new tooltip
+function updateToolTip(chosenXAxis, circlesGroup) {
+
+    var xlabel;
+    if (chosenXAxis === "poverty") {
+      xlabel = "Poverty:";
+    }
+    else if (chosenXAxis === "age") {
+        xlabel = "Median age: "
+    }
+    else {
+      xlabel = "Median Household Income: ";
+    }
+  
+    var toolTip = d3.tip()
+      .attr("class", "tooltip")
+      .offset([80, -60])
+      .html(function(d) {
+        return (`${d.state}<br>${xlabel} ${d[chosenXAxis]}<br>Obesity: ${d.obesity}`);
+      });
+  
+    circlesGroup.call(toolTip);
+  
+    circlesGroup.on("mouseover", function(data) {
+      toolTip.show(data);
+    })
+      // onmouseout event
+      .on("mouseout", function(data, index) {
+        toolTip.hide(data);
+      });
+  
+    return circlesGroup;
+  }
