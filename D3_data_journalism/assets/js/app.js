@@ -63,8 +63,7 @@ function renderCircles(circlesGroup, newXScale, chosenXAxis) {
 
   
 
-// function used for updating circles labels group with a transition to
-// new circles
+// function used for updating circles labels group
 function renderCircleLabels(circleLabelsGroup, newXScale, chosenXAxis) {
 
     circleLabelsGroup.transition()
@@ -107,3 +106,43 @@ function updateToolTip(chosenXAxis, circlesGroup) {
   
     return circlesGroup;
   }
+
+  // Retrieve data from the CSV file and execute everything below
+d3.csv("/data/data.csv").then(function(CSVdata) {
+    // parse data
+    CSVdata.forEach(function(data) {
+      data.poverty = +data.poverty;
+      data.age = +data.age;
+      data.income = +data.income;
+      data.obesity = +data.obesity;
+    });
+  
+    // xLinearScale function above csv import
+    var xLinearScale = xScale(CSVdata, chosenXAxis);
+  
+    // Create y scale function
+    var yLinearScale = d3.scaleLinear()
+      .domain([0, d3.max(CSVdata, d => d.obesity)])
+      .range([height, 0]);
+    var bottomAxis = d3.axisBottom(xLinearScale);
+    var leftAxis = d3.axisLeft(yLinearScale);
+    var xAxis = chartGroup.append("g")
+      .classed("x-axis", true)
+      .attr("transform", `translate(0, ${height})`)
+      .call(bottomAxis);
+  
+    // append y axis
+    chartGroup.append("g")
+      .call(leftAxis);
+  
+    // append initial circles
+    var circlesGroup = chartGroup.selectAll("circle")
+      .data(CSVdata)
+      .enter()
+      .append("circle")
+      .attr("cx", d => xLinearScale(d[chosenXAxis]))
+      .attr("cy", d => yLinearScale(d.obesity))
+      .attr("r", 15)
+      .attr("fill", "lightblue")
+      .attr("opacity", ".75");
+});
