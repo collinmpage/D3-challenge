@@ -157,6 +157,39 @@ var circleLabelsGroup = chartGroup.append("g").selectAll("text")
 .attr("font-size", "10px")
 .attr("color", "black");
 
+ // Create group for three x-axis labels
+ var xLabelsGroup = chartGroup.append("g")
+ .attr("transform", `translate(${width / 2}, ${height + 20})`);
 
+var povertyLabel = xLabelsGroup.append("text")
+ .attr("x", 0)
+ .attr("y", 20)
+ .attr("value", "poverty") // value to grab for event listener
+ .classed("active", true)
+ .text("In Poverty (%)");
 
+var ageLabel = xLabelsGroup.append("text")
+ .attr("x", 0)
+ .attr("y", 40)
+ .attr("value", "age") // value to grab for event listener
+ .classed("inactive", true)
+ .text("Age (Median)");
+
+var incomeLabel = xLabelsGroup.append("text")
+ .attr("x", 0)
+ .attr("y", 60)
+ .attr("value", "income") // value to grab for event listener
+ .classed("inactive", true)
+ .text("Household Income (Median)");
+  
+    // append y axis
+    chartGroup.append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0 - margin.left)
+      .attr("x", 0 - (height / 2))
+      .attr("dy", "1em")
+      .classed("axis-text", true)
+      .text("Obesity (%)");
+  
+      
 });
