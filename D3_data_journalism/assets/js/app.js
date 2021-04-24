@@ -145,4 +145,18 @@ d3.csv("/data/data.csv").then(function(CSVdata) {
       .attr("r", 15)
       .attr("fill", "lightblue")
       .attr("opacity", ".75");
+
+// Add state abbreviations to cirlces
+var circleLabelsGroup = chartGroup.append("g").selectAll("text")
+.data(CSVdata)
+.enter()
+.append("text")
+.attr("x", d => xLinearScale(d[chosenXAxis]) - 7.5)
+.attr("y", d => yLinearScale(d.obesity) + 3.5)
+.text(d => d.abbr)
+.attr("font-size", "10px")
+.attr("color", "black");
+
+
+
 });
